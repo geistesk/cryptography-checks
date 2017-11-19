@@ -41,4 +41,14 @@ if __name__ == '__main__':
     assert (c1, c2) == (11, 5)
     assert eg_user_a.decrypt((c1, c2)) == 17
 
+    # CRYPTO-89
+    eg_session = EGSession(19, 10)
+    eg_user_a = EGUser(eg_session, 16)
+    eg_user_b = EGUser(eg_session, 3)  # Bob's private key doesn't matter
+    assert eg_user_a.y == 4
+
+    (s1, s2) = eg_user_a.sign(14, 5, 11)
+    assert (s1, s2) == (3, 4)
+    assert eg_user_b.verify(eg_user_a, s1, s2, 14)
+
     print('Succeeded.')
