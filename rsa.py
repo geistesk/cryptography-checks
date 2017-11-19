@@ -1,5 +1,6 @@
 from fractions import gcd
 from random import choice
+from prim import is_prim
 
 
 class RSA:
@@ -7,6 +8,9 @@ class RSA:
         'Generate a RSA-keypair with a given p, q and optinal e.'
         self.p = p
         self.q = q
+
+        assert is_prim(self.p)
+        assert is_prim(self.q)
 
         self._n = p * q
         self._phi = RSA.phi(p, q)
