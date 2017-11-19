@@ -2,6 +2,7 @@
 
 from rsa import RSA
 from dh import DHUser, DHSession
+from elgamal import EGUser, EGSession
 
 if __name__ == '__main__':
     # RSA
@@ -22,11 +23,22 @@ if __name__ == '__main__':
     dh_session = DHSession(353, 3)
     dh_user_a = DHUser(dh_session, 97)
     dh_user_b = DHUser(dh_session, 233)
-
     assert dh_user_a.y == 40
     assert dh_user_b.y == 248
+
     assert dh_session.session_key(dh_user_a, dh_user_b) == \
         dh_user_a.session_key(dh_user_b.public_key()) == \
         dh_user_b.session_key(dh_user_a.public_key()) == 160
+
+    # ElGamal
+    # CRYPTO-41
+    eg_session = EGSession(19, 10)
+    eg_user_a = EGUser(eg_session, 5)
+    eg_user_b = EGUser(eg_session, 3)  # Bob's private key doesn't matter
+    assert eg_user_a.y == 3
+
+    (c1, c2) = eg_user_b.encrypt(eg_user_a, 17, k=6)
+    assert (c1, c2) == (11, 5)
+    assert eg_user_a.decrypt((c1, c2)) == 17
 
     print('Succeeded.')
